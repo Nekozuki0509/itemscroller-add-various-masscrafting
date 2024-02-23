@@ -4,7 +4,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.StonecuttingRecipe;
+import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -27,6 +30,11 @@ import fi.dy.masa.itemscroller.util.AccessorUtils;
 import fi.dy.masa.itemscroller.util.InputUtils;
 import fi.dy.masa.itemscroller.util.InventoryUtils;
 import fi.dy.masa.itemscroller.util.MoveAction;
+
+import java.util.List;
+
+import static fi.dy.masa.itemscroller.util.InventoryUtils.shiftClickSlot;
+import static fi.dy.masa.itemscroller.util.InventoryUtils.tryMoveItemsToCraftingGridSlots;
 
 public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
     private static final KeybindCallbacks INSTANCE = new KeybindCallbacks();
@@ -161,7 +169,20 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                 CraftingRecipe bookRecipe = InventoryUtils.getBookRecipeFromPattern(recipe);
                 if (bookRecipe != null && !bookRecipe.isIgnoredInRecipeBook()) { // Use recipe book if possible
                     // System.out.println("recipe");
-                    mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
+                    if (gui instanceof StonecutterScreen && recipe.getRecipeLength() == 1){
+                        Slot slot = CraftingHandler.getFirstCraftingOutputSlotForGui(gui);
+                        tryMoveItemsToCraftingGridSlots(recipe, slot, gui, true);
+                        List<StonecuttingRecipe> recipes = ((StonecutterScreenHandler) gui.getScreenHandler()).getAvailableRecipes();
+                        for (int j = 0; j < recipes.size(); j++) {
+                            if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
+                                mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
+                                shiftClickSlot(gui, 1);
+                                break;
+                            }
+                        }
+                    }else if (recipe.getRecipeLength() != 1){
+                        mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
+                    }
                 } else {
                     // System.out.println("move");
                     InventoryUtils.tryMoveItemsToFirstCraftingGrid(recipe, gui, true);
