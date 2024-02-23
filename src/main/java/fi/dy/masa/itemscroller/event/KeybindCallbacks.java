@@ -33,6 +33,7 @@ import fi.dy.masa.itemscroller.util.MoveAction;
 
 import java.util.List;
 
+import static fi.dy.masa.itemscroller.util.InventoryUtils.shiftClickSlot;
 import static fi.dy.masa.itemscroller.util.InventoryUtils.tryMoveItemsToCraftingGridSlots;
 
 public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
@@ -175,6 +176,7 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                         for (int j = 0; j < recipes.size(); j++) {
                             if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
                                 mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
+                                shiftClickSlot(gui, 1);
                                 break;
                             }
                         }
