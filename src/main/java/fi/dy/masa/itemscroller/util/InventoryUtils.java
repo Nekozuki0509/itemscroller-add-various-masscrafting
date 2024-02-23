@@ -101,7 +101,7 @@ public class InventoryUtils {
     }
 
     public static boolean isCraftingSlot(HandledScreen<? extends ScreenHandler> gui, @Nullable Slot slot) {
-        return slot != null && CraftingHandler.getCraftingGridSlots(gui, slot) != null;
+        return slot != null && (CraftingHandler.getCraftingGridSlots(gui, slot) != null || slot.getClass().getName().equals("net.minecraft.class_3971$2"));
     }
 
     /**
