@@ -1,4 +1,4 @@
-## MSC(Mass Stone Cutting) is not Masa's original itemscroller. If you have issues with this mod, please contact Nekozuki0509 (or open a bug report here).
+## itemscroller-add-stonecutting is not Masa's original itemscroller. If you have issues with this mod, please contact Nekozuki0509 (or open a bug report here).
 ## Note
 This is a customized version of Andrews54757's itemscroller-crafting-fix mod that add masscraft to stonecutter for 1.20.1. Andrews54757's original mod can be found [here](https://github.com/Andrews54757/itemscroller-crafting-fix)
 
