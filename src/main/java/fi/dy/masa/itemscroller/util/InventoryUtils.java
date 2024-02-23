@@ -25,10 +25,7 @@ import it.unimi.dsi.fastutil.ints.IntComparator;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -38,10 +35,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.screen.Generic3x3ContainerScreenHandler;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.MerchantScreenHandler;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.screen.slot.TradeOutputSlot;
@@ -1168,10 +1167,10 @@ public class InventoryUtils {
         return clearedAll;
     }
 
-    private static boolean tryMoveItemsToCraftingGridSlots(RecipePattern recipe,
-            Slot slot,
-            HandledScreen<? extends ScreenHandler> gui,
-            boolean fillStacks) {
+    public static boolean tryMoveItemsToCraftingGridSlots(RecipePattern recipe,
+                                                          Slot slot,
+                                                          HandledScreen<? extends ScreenHandler> gui,
+                                                          boolean fillStacks) {
         ScreenHandler container = gui.getScreenHandler();
         int numSlots = container.slots.size();
         SlotRange range = CraftingHandler.getCraftingGridSlots(gui, slot);
@@ -1346,7 +1345,18 @@ public class InventoryUtils {
                     CraftingRecipe bookRecipe = getBookRecipeFromPattern(recipe);
                     if (bookRecipe != null && !bookRecipe.isIgnoredInRecipeBook()) { // Use recipe book if possible
                         MinecraftClient mc = MinecraftClient.getInstance();
-                        mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
+                        if (gui instanceof StonecutterScreen && recipe.getRecipeLength() == 1){
+                            tryMoveItemsToCraftingGridSlots(recipe, slot, gui, true);
+                            List<StonecuttingRecipe> recipes = ((StonecutterScreenHandler) gui.getScreenHandler()).getAvailableRecipes();
+                            for (int j = 0; j < recipes.size(); j++) {
+                                if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
+                                    mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
+                                    break;
+                                }
+                            }
+                        }else if (recipe.getRecipeLength() != 1){
+                            mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
+                        }
                     } else {
                         // Clear all items from the grid first, to avoid unbalanced stacks
                         if (clearCraftingGridOfItems(recipe, gui, range, false) == false) {
