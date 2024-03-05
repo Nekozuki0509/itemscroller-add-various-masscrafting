@@ -228,16 +228,23 @@ public class RenderEventHandler
     private void renderRecipeItems(RecipePattern recipe, int recipeCountPerPage, HandledScreen<?> gui, DrawContext drawContext)
     {
         ItemStack[] items = recipe.getRecipeItems();
-        final int recipeDimensions = (int) Math.ceil(Math.sqrt(recipe.getRecipeLength()));
+        int recipelen = recipe.getRecipeLength();
         int x = -3 * 17 + 2;
         int y = 3 * this.entryHeight;
+        final double recipeDimensions;
+        if ((recipeDimensions = Math.sqrt(recipelen)) % 1 == 0) {
+            for (int i = 0, row = 0; row < recipeDimensions; row++) {
+                for (int col = 0; col < recipeDimensions; col++, i++) {
+                    int xOff = col * 17;
+                    int yOff = row * 17;
 
-        for (int i = 0, row = 0; row < recipeDimensions; row++)
-        {
-            for (int col = 0; col < recipeDimensions; col++, i++)
-            {
-                int xOff = col * 17;
-                int yOff = row * 17;
+                    this.renderStackAt(items[i], x + xOff, y + yOff, false, drawContext);
+                }
+            }
+        } else {
+            for (int i=0;i<recipelen;i++) {
+                int xOff = i * 17;
+                int yOff = 17;
 
                 this.renderStackAt(items[i], x + xOff, y + yOff, false, drawContext);
             }

@@ -32,6 +32,7 @@ import fi.dy.masa.itemscroller.util.InventoryUtils;
 import fi.dy.masa.itemscroller.util.MoveAction;
 
 import java.util.List;
+import java.util.Objects;
 
 import static fi.dy.masa.itemscroller.util.InventoryUtils.shiftClickSlot;
 import static fi.dy.masa.itemscroller.util.InventoryUtils.tryMoveItemsToCraftingGridSlots;

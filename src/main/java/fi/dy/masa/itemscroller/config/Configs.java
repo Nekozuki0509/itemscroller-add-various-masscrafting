@@ -7,10 +7,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.gui.screen.ingame.CraftingScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
-import net.minecraft.screen.StonecutterScreenHandler;
+import net.minecraft.client.gui.screen.ingame.*;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.CraftingResultSlot;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -121,7 +119,13 @@ public class Configs implements IConfigHandler
         CraftingHandler.addCraftingGridDefinition(CraftingScreen.class.getName(), CraftingResultSlot.class.getName(), 0, new SlotRange(1, 9));
         //"net.minecraft.client.gui.inventory.PlayerInventoryScreen,net.minecraft.inventory.SlotCrafting,0,1-4", // vanilla player inventory crafting grid
         CraftingHandler.addCraftingGridDefinition(InventoryScreen.class.getName(), CraftingResultSlot.class.getName(), 0, new SlotRange(1, 4));
-        CraftingHandler.addCraftingGridDefinition(StonecutterScreen.class.getName(), StonecutterScreenHandler.class.getName() + "$2", 1, new SlotRange(0, 1));
+        CraftingHandler.addCraftingGridDefinition(StonecutterScreen.class.getName(), StonecutterScreenHandler.class.getName()+"$2", 1, new SlotRange(0, 1));
+        CraftingHandler.addCraftingGridDefinition(EnchantmentScreen.class.getName(), EnchantmentScreenHandler.class.getName()+"$2", 0, new SlotRange(0, 2));
+        CraftingHandler.addCraftingGridDefinition(SmithingScreen.class.getName(), ForgingScreenHandler.class.getName()+"$2", 3, new SlotRange(0, 3));
+        CraftingHandler.addCraftingGridDefinition(GrindstoneScreen.class.getName(), GrindstoneScreenHandler.class.getName()+"$4", 2, new SlotRange(0, 2));
+        CraftingHandler.addCraftingGridDefinition(AnvilScreen.class.getName(), ForgingScreenHandler.class.getName()+"$2", 2, new SlotRange(0, 2));
+        CraftingHandler.addCraftingGridDefinition(CartographyTableScreen.class.getName(), CartographyTableScreenHandler.class.getName()+"$5", 2, new SlotRange(0, 2));
+        CraftingHandler.addCraftingGridDefinition(LoomScreen.class.getName(), LoomScreenHandler.class.getName()+"$6", 0, new SlotRange(0, 3));
     }
 
     public static void saveToFile()
