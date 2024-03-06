@@ -2,9 +2,7 @@ package fi.dy.masa.itemscroller.event;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.StonecuttingRecipe;
 import net.minecraft.screen.StonecutterScreenHandler;
@@ -184,8 +182,16 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                         mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
                     }
                 } else {
-                    // System.out.println("move");
                     InventoryUtils.tryMoveItemsToFirstCraftingGrid(recipe, gui, true);
+                    if (gui instanceof EnchantmentScreen) mc.interactionManager.clickButton(gui.getScreenHandler().syncId, 0);
+                    for (int i = 0; i < recipe.getMaxCraftAmount(); i++) {
+                        InventoryUtils.dropStack(gui, outputSlot.id);
+                    }
+                    if (gui instanceof EnchantmentScreen || gui instanceof GrindstoneScreen || gui instanceof CartographyTableScreen ||
+                            gui instanceof SmithingScreen || gui instanceof AnvilScreen) {
+                        this.massCraftTicker = 0;
+                        return;
+                    }
                 }
 
                 for (int i = 0; i < recipe.getMaxCraftAmount(); i++) {

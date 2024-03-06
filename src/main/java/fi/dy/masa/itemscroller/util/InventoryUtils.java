@@ -1346,18 +1346,8 @@ public class InventoryUtils {
                     CraftingRecipe bookRecipe = getBookRecipeFromPattern(recipe);
                     if (bookRecipe != null && !bookRecipe.isIgnoredInRecipeBook()) { // Use recipe book if possible
                         MinecraftClient mc = MinecraftClient.getInstance();
-                        if (gui instanceof StonecutterScreen && recipe.getRecipeLength() == 1){
-                            tryMoveItemsToCraftingGridSlots(recipe, slot, gui, true);
-                            List<StonecuttingRecipe> recipes = ((StonecutterScreenHandler) gui.getScreenHandler()).getAvailableRecipes();
-                            for (int j = 0; j < recipes.size(); j++) {
-                                if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
-                                    mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
-                                    break;
-                                }
-                            }
-                        }else if (recipe.getRecipeLength() != 1){
+                        if ((gui instanceof CraftingScreen || gui instanceof InventoryScreen) && (recipe.getRecipeLength() == 4 || recipe.getRecipeLength() == 9))
                             mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
-                        }
                     } else {
                         // Clear all items from the grid first, to avoid unbalanced stacks
                         if (clearCraftingGridOfItems(recipe, gui, range, false) == false) {
