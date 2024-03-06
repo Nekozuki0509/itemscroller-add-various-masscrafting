@@ -125,7 +125,6 @@ public class Configs implements IConfigHandler
         CraftingHandler.addCraftingGridDefinition(GrindstoneScreen.class.getName(), GrindstoneScreenHandler.class.getName()+"$4", 2, new SlotRange(0, 2));
         CraftingHandler.addCraftingGridDefinition(AnvilScreen.class.getName(), ForgingScreenHandler.class.getName()+"$2", 2, new SlotRange(0, 2));
         CraftingHandler.addCraftingGridDefinition(CartographyTableScreen.class.getName(), CartographyTableScreenHandler.class.getName()+"$5", 2, new SlotRange(0, 2));
-        CraftingHandler.addCraftingGridDefinition(LoomScreen.class.getName(), LoomScreenHandler.class.getName()+"$6", 0, new SlotRange(0, 3));
     }
 
     public static void saveToFile()

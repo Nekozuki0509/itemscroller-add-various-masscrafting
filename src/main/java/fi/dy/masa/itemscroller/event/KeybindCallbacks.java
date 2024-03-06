@@ -2,11 +2,10 @@ package fi.dy.masa.itemscroller.event;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.StonecuttingRecipe;
+import net.minecraft.screen.LoomScreenHandler;
 import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
@@ -170,23 +169,31 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                 CraftingRecipe bookRecipe = InventoryUtils.getBookRecipeFromPattern(recipe);
                 if (bookRecipe != null && !bookRecipe.isIgnoredInRecipeBook()) { // Use recipe book if possible
                     // System.out.println("recipe");
-                    if (gui instanceof StonecutterScreen && recipe.getRecipeLength() == 1){
+                    if (gui instanceof StonecutterScreen && recipe.getRecipeLength() == 1) {
                         Slot slot = CraftingHandler.getFirstCraftingOutputSlotForGui(gui);
                         tryMoveItemsToCraftingGridSlots(recipe, slot, gui, true);
                         List<StonecuttingRecipe> recipes = ((StonecutterScreenHandler) gui.getScreenHandler()).getAvailableRecipes();
                         for (int j = 0; j < recipes.size(); j++) {
-                            if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
+                            if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())) {
                                 mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
                                 shiftClickSlot(gui, 1);
                                 break;
                             }
                         }
-                    }else if (recipe.getRecipeLength() != 1){
+                    } else if (recipe.getRecipeLength() != 1){
                         mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
                     }
                 } else {
-                    // System.out.println("move");
                     InventoryUtils.tryMoveItemsToFirstCraftingGrid(recipe, gui, true);
+                    if (gui instanceof EnchantmentScreen) mc.interactionManager.clickButton(gui.getScreenHandler().syncId, 0);
+                    for (int i = 0; i < recipe.getMaxCraftAmount(); i++) {
+                        InventoryUtils.dropStack(gui, outputSlot.id);
+                    }
+                    if (gui instanceof EnchantmentScreen || gui instanceof GrindstoneScreen || gui instanceof CartographyTableScreen ||
+                            gui instanceof SmithingScreen || gui instanceof AnvilScreen) {
+                        this.massCraftTicker = 0;
+                        return;
+                    }
                 }
 
                 for (int i = 0; i < recipe.getMaxCraftAmount(); i++) {
