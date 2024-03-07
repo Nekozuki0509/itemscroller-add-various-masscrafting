@@ -225,17 +225,24 @@ public class RenderEventHandler
 
     private void renderRecipeItems(RecipePattern recipe, int recipeCountPerPage, HandledScreen<?> gui)
     {
+        int recipelen = recipe.getRecipeLength();
         ItemStack[] items = recipe.getRecipeItems();
-        final int recipeDimensions = (int) Math.ceil(Math.sqrt(recipe.getRecipeLength()));
+        final double recipeDimensions;
         int x = -3 * 17 + 2;
         int y = 3 * this.entryHeight;
+        if ((recipeDimensions = Math.sqrt(recipelen)) % 1 == 0) {
+            for (int i = 0, row = 0; row < recipeDimensions; row++) {
+                for (int col = 0; col < recipeDimensions; col++, i++) {
+                    int xOff = col * 17;
+                    int yOff = row * 17;
 
-        for (int i = 0, row = 0; row < recipeDimensions; row++)
-        {
-            for (int col = 0; col < recipeDimensions; col++, i++)
-            {
-                int xOff = col * 17;
-                int yOff = row * 17;
+                    this.renderStackAt(items[i], x + xOff, y + yOff, false);
+                }
+            }
+        } else {
+            for (int i=0;i<recipelen;i++) {
+                int xOff = i * 17;
+                int yOff = 17;
 
                 this.renderStackAt(items[i], x + xOff, y + yOff, false);
             }
@@ -244,7 +251,8 @@ public class RenderEventHandler
 
     private ItemStack getHoveredRecipeIngredient(int mouseX, int mouseY, RecipePattern recipe, int recipeCountPerPage, HandledScreen<?> gui)
     {
-        final int recipeDimensions = (int) Math.ceil(Math.sqrt(recipe.getRecipeLength()));
+        final int recipelen = recipe.getRecipeLength();
+        final double recipeDimensions = Math.sqrt(recipelen);
         int scaledStackDimensions = (int) (16 * this.scale);
         int scaledGridEntry = (int) (17 * this.scale);
         int x = this.recipeListX - (int) ((3 * 17 - 2) * this.scale);
@@ -253,18 +261,27 @@ public class RenderEventHandler
         if (mouseX >= x && mouseX <= x + recipeDimensions * scaledGridEntry &&
             mouseY >= y && mouseY <= y + recipeDimensions * scaledGridEntry)
         {
-            for (int i = 0, row = 0; row < recipeDimensions; row++)
-            {
-                for (int col = 0; col < recipeDimensions; col++, i++)
-                {
-                    int xOff = col * scaledGridEntry;
-                    int yOff = row * scaledGridEntry;
-                    int xStart = x + xOff;
-                    int yStart = y + yOff;
+            if (recipeDimensions % 1 == 0) {
+                for (int i = 0, row = 0; row < recipeDimensions; row++) {
+                    for (int col = 0; col < recipeDimensions; col++, i++) {
+                        int xOff = col * scaledGridEntry;
+                        int yOff = row * scaledGridEntry;
+                        int xStart = x + xOff;
+                        int yStart = y + yOff;
 
+                        if (mouseX >= xStart && mouseX < xStart + scaledStackDimensions &&
+                                mouseY >= yStart && mouseY < yStart + scaledStackDimensions) {
+                            return recipe.getRecipeItems()[i];
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < recipelen; i++) {
+                    int yOff = i * scaledGridEntry;
+                    int xStart = x + scaledGridEntry;
+                    int yStart = y + yOff;
                     if (mouseX >= xStart && mouseX < xStart + scaledStackDimensions &&
-                        mouseY >= yStart && mouseY < yStart + scaledStackDimensions)
-                    {
+                            mouseY >= yStart && mouseY < yStart + scaledStackDimensions) {
                         return recipe.getRecipeItems()[i];
                     }
                 }

@@ -22,10 +22,7 @@ import fi.dy.masa.itemscroller.villager.VillagerUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -39,7 +36,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.Generic3x3ContainerScreenHandler;
 import net.minecraft.screen.MerchantScreenHandler;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.CraftingResultSlot;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.screen.slot.TradeOutputSlot;
@@ -47,9 +43,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.village.TradeOfferList;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import fi.dy.masa.itemscroller.mixin.IMixinCraftingResultSlot;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntComparator;
 
@@ -59,16 +52,12 @@ public class InventoryUtils {
     private static WeakReference<Slot> sourceSlotCandidate = null;
     private static WeakReference<Slot> sourceSlot = null;
     private static ItemStack stackInCursorLast = ItemStack.EMPTY;
-    @Nullable
-    protected static CraftingRecipe lastRecipe;
     private static MoveAction activeMoveAction = MoveAction.NONE;
     private static int lastPosX;
     private static int lastPosY;
     private static int slotNumberLast;
-    private static boolean inhibitCraftResultUpdate;
 
     public static void setInhibitCraftingOutputUpdate(boolean inhibitUpdate) {
-        inhibitCraftResultUpdate = inhibitUpdate;
     }
 
     public static String getStackString(ItemStack stack) {
@@ -1177,10 +1166,10 @@ public class InventoryUtils {
         return clearedAll;
     }
 
-    private static boolean tryMoveItemsToCraftingGridSlots(RecipePattern recipe,
-            Slot slot,
-            HandledScreen<? extends ScreenHandler> gui,
-            boolean fillStacks) {
+    public static boolean tryMoveItemsToCraftingGridSlots(RecipePattern recipe,
+                                                          Slot slot,
+                                                          HandledScreen<? extends ScreenHandler> gui,
+                                                          boolean fillStacks) {
         ScreenHandler container = gui.getScreenHandler();
         int numSlots = container.slots.size();
         SlotRange range = CraftingHandler.getCraftingGridSlots(gui, slot);
@@ -1355,7 +1344,8 @@ public class InventoryUtils {
                     CraftingRecipe bookRecipe = getBookRecipeFromPattern(recipe);
                     if (bookRecipe != null && !bookRecipe.isIgnoredInRecipeBook()) { // Use recipe book if possible
                         MinecraftClient mc = MinecraftClient.getInstance();
-                        mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
+                        if ((gui instanceof CraftingScreen || gui instanceof InventoryScreen) && (recipe.getRecipeLength() == 4 || recipe.getRecipeLength() == 9))
+                            mc.interactionManager.clickRecipe(gui.getScreenHandler().syncId, bookRecipe, true);
                     } else {
                         // Clear all items from the grid first, to avoid unbalanced stacks
                         if (clearCraftingGridOfItems(recipe, gui, range, false) == false) {
