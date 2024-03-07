@@ -122,6 +122,7 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
             InventoryUtils.moveAllCraftingResultsToOtherInventory(recipes.getSelectedRecipe(), gui);
             return true;
         } else if (key == Hotkeys.STORE_RECIPE.getKeybind()) {
+            ItemScroller.logger.info(gui.getClass().getName());
             if (InputUtils.isRecipeViewOpen() && InventoryUtils.isCraftingSlot(gui, slot)) {
                 recipes.storeCraftingRecipeToCurrentSelection(slot, gui, true);
                 return true;
