@@ -173,7 +173,7 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                         tryMoveItemsToCraftingGridSlots(recipe, slot, gui, true);
                         List<StonecuttingRecipe> recipes = ((StonecutterScreenHandler) gui.getScreenHandler()).getAvailableRecipes();
                         for (int j = 0; j < recipes.size(); j++) {
-                            if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput(null).getItem().toString())){
+                            if (recipe.getResult().getItem().toString().equals(recipes.get(j).getOutput().getItem().toString())){
                                 mc.interactionManager.clickButton(gui.getScreenHandler().syncId, j);
                                 shiftClickSlot(gui, 1);
                                 break;
