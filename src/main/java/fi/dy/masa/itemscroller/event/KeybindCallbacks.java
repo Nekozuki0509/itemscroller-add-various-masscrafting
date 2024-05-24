@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.StonecuttingRecipe;
+import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import fi.dy.masa.itemscroller.ItemScroller;
@@ -28,6 +29,7 @@ import fi.dy.masa.malilib.interfaces.IClientTickHandler;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.util.InfoUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -212,6 +214,8 @@ public class KeybindCallbacks implements IHotkeyCallback, IClientTickHandler {
                     } else {
                         // System.out.println("move");
                         InventoryUtils.tryMoveItemsToFirstCraftingGrid(recipe, gui, true);
+                        if (gui instanceof AnvilScreen && StringUtils.isBlank(Configs.Generic.ANVIL_MASS_CRAFT_NEW_ITEM_NAME.getStringValue()))
+                            ((AnvilScreenHandler) gui.getScreenHandler()).setNewItemName(Configs.Generic.ANVIL_MASS_CRAFT_NEW_ITEM_NAME.getStringValue());
                         if (gui instanceof EnchantmentScreen) mc.interactionManager.clickButton(gui.getScreenHandler().syncId, 0);
                         for (int i = 0; i < recipe.getMaxCraftAmount(); i++) {
                             InventoryUtils.dropStack(gui, outputSlot.id);
