@@ -1,3 +1,4 @@
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Nekozuki0509/itemscroller-add-various-masscrafting/total)
 ## itemscroller-various-masscrafting is not Masa's original itemscroller. If you have issues with this mod, please contact Nekozuki0509 (or open a bug report here).
 ## Note
 This is a customized version of Andrews54757's itemscroller-crafting-fix mod that add various masscrafing for 1.20.1. Andrews54757's original mod can be found [here](https://github.com/Andrews54757/itemscroller-crafting-fix)
