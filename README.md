@@ -1,4 +1,4 @@
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Nekozuki0509/itemscroller-add-various-masscrafting/total?logo=github&color=blue)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Nekozuki0509/itemscroller-add-various-masscrafting/total?logo=github&color=blue)](https://github.com/Nekozuki0509/itemscroller-add-various-masscrafting/releases)
 [![Discord](https://img.shields.io/discord/1241236305741090836?logo=discord&color=5765f2)](https://discord.gg/352Cdy8MjV)
 [![Static Badge](https://img.shields.io/badge/litlink-Nekozuki0509-9594f9)](https://lit.link/nekozuki0509)
 ## itemscroller-various-masscrafting is not Masa's original itemscroller. If you have issues with this mod, please contact Nekozuki0509 (or open a bug report here).
